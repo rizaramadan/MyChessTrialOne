@@ -9,6 +9,8 @@ namespace MyChessTrialOne
         public char X { get; set; }
         public int Y { get; set; }
 
+        public int XToInt() => Convert.ToUInt16(X);
+
         public override string ToString()
         {
             return $"{X}{Y}";
@@ -31,87 +33,82 @@ namespace MyChessTrialOne
         Black,
     }
 
-    public class Board : Dictionary<Cell, IPiece>
+    public class Board : Dictionary<Cell, Piece>
     {
 
     }
 
-    public interface IPiece
-    {
-        EPlayer Player { get; set; }
-        string PrintToBoard();
-    }
-
-    public class Pawn : IPiece
+    public abstract class Piece
     {
         public EPlayer Player { get; set; }
+        public char BoardChar { get; set; }
 
-        public string PrintToBoard() // This method is 98% similar across all Pieces, can be more DRY by just setting a PieceChar
-        {                            // to the requisite char and implement the PrintToBoard method on the base class
-            var result = "P"; 
-            return Player == EPlayer.White
-                ? result
-                : result.ToLower();
+        public Movement Movement { get; set; }
+
+        public abstract void InitMovement();
+
+        public void ValidatingMovement(MoveValidationContext context)
+        {
+            if (context.ActivePlayer == Player)
+                Movement.ValidMove(context);
+            else
+                context.InvalidMessage = "not players piece";
         }
     }
 
-    public class Rock : IPiece
+    public class Pawn : Piece
     {
-        public EPlayer Player { get; set; }
-        public string PrintToBoard()
+        public override void InitMovement()
         {
-            var result = "R";
-            return Player == EPlayer.White
-                ? result
-                : result.ToLower();
+            Movement = new Default();
+            Movement = new VerticalMovement(Movement, 1, EVerticalMode.ForwardOnlyCannotCapture);
+            Movement = new PawnSpecialMovement(Movement);
         }
     }
 
-    public class Knight : IPiece
+    public class Rock : Piece
     {
-        public EPlayer Player { get; set; }
-        public string PrintToBoard()
+        public override void InitMovement()
         {
-            var result = "T";
-            return Player == EPlayer.White
-                ? result
-                : result.ToLower();
+            Movement = new Default();
+            Movement = new VerticalMovement(Movement, 8, EVerticalMode.Any);
+            Movement = new HorizontalMovement(Movement, 8);
         }
     }
 
-    public class Bishop : IPiece
+    public class Knight : Piece
     {
-        public EPlayer Player { get; set; }
-        public string PrintToBoard()
+        public override void InitMovement()
         {
-            var result = "B";
-            return Player == EPlayer.White
-                ? result
-                : result.ToLower();
+            Movement = new Default();
         }
     }
 
-    public class Queen : IPiece
+    public class Bishop : Piece
     {
-        public EPlayer Player { get; set; }
-        public string PrintToBoard()
+        public override void InitMovement()
         {
-            var result = "Q";
-            return Player == EPlayer.White
-                ? result
-                : result.ToLower();
+            Movement = new Default();
         }
     }
 
-    public class King : IPiece
+    public class Queen : Piece
     {
-        public EPlayer Player { get; set; }
-        public string PrintToBoard()
+        public override void InitMovement()
         {
-            var result = "K";
-            return Player == EPlayer.White
-                ? result
-                : result.ToLower();
+            Movement = new Default();
+            Movement = new VerticalMovement(Movement, 8, EVerticalMode.Any);
+            Movement = new HorizontalMovement(Movement, 8);
+        }
+    }
+
+    public class King : Piece
+    {
+        public override void InitMovement()
+        {
+            Movement = new Default();
+            Movement = new VerticalMovement(Movement, 1, EVerticalMode.Any);
+            Movement = new HorizontalMovement(Movement, 1);
         }
     }
 

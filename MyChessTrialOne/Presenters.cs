@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MyChessTrialOne
@@ -22,7 +23,7 @@ namespace MyChessTrialOne
                         var piece = board[theCell];
                         if (piece != null)
                         {
-                            var onBoard = piece.PrintToBoard();
+                            var onBoard = piece.BoardChar;
                             Console.Write($"{onBoard} ");
                         }
                         else
@@ -37,6 +38,18 @@ namespace MyChessTrialOne
                 }
                 Console.WriteLine();
             }
+            Console.WriteLine("------------------------");
+        }
+    }
+
+    public class CapturedPresenter
+    {
+        public void Print(List<Piece> captured)
+        {
+            if (captured == null || captured.Count == 0)
+                return;
+            Console.WriteLine($"Captured black: {string.Join(',',captured.Where(x => x.Player == EPlayer.Black).Select(x => $"{x.BoardChar}"))}");
+            Console.WriteLine($"Captured white: {string.Join(',', captured.Where(x => x.Player == EPlayer.White).Select(x => $"{x.BoardChar}"))}");
             Console.WriteLine("------------------------");
         }
     }
