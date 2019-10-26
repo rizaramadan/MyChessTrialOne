@@ -46,9 +46,9 @@ namespace MyChessTrialOne
     {
         public EPlayer Player { get; set; }
 
-        public string PrintToBoard()
-        {
-            var result = "P";
+        public string PrintToBoard() // This method is 98% similar across all Pieces, can be more DRY by just setting a PieceChar
+        {                            // to the requisite char and implement the PrintToBoard method on the base class
+            var result = "P"; 
             return Player == EPlayer.White
                 ? result
                 : result.ToLower();
