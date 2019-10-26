@@ -20,7 +20,7 @@ namespace MyChessTrialOne
             if (!board.ContainsKey(dst))
                 return false;
             var dstPiece = board[dst];
-            return piece.Player == piece.Player
+            return piece.Player == piece.Player // Looks like a bug, should be dstPiece
                 ? true
                 : false;
         }
