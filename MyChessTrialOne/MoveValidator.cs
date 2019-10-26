@@ -30,7 +30,7 @@ namespace MyChessTrialOne
 
     public class PawnMovement : Movement
     {
-        public const int OriginalWhite = 2;
+        public const int OriginalWhite = 2; // Magic numbers like these obfuscate the semantics and make the code harder to maintain
         public const int OriginalBlack = 7;
 
         public override MoveValidationOutput IsMoveValid(IPiece piece, Cell src, Cell dst, Board board)
@@ -104,9 +104,9 @@ namespace MyChessTrialOne
     {
         public override MoveValidationOutput IsMoveValid(IPiece piece, Cell src, Cell dst, Board board)
         {
-            var xSrcInt = Convert.ToUInt16(src.X);
-            var xDstInt = Convert.ToUInt16(dst.X);
-            var validMove = false;
+            var xSrcInt = Convert.ToUInt16(src.X); // Quite a lot of redundant code between both Movement classes, surely we can 
+            var xDstInt = Convert.ToUInt16(dst.X); // reduce the redundancy and apply DRY instead for the parts that bootstrap/prep
+            var validMove = false;                 //  the data required for the rule evaluations
             if (Math.Abs(src.Y - dst.Y) == 1)
             {
                 //forward 1, then left / right 2
@@ -166,8 +166,8 @@ namespace MyChessTrialOne
     }
 
 
-    public class MoveValidator
-    {
+    public class MoveValidator // Creating new dictionary for movement rules smells like Movement can be defined 
+    {                          // as a member of the Piece class instead of an external dict
         Dictionary<Type, Movement> MovementRules = new Dictionary<Type, Movement>();
 
         public MoveValidator()
@@ -185,8 +185,8 @@ namespace MyChessTrialOne
                     Valid = false,
                     InvalidMessage = "piece not players"
                 };
-            var rules = MovementRules[piece.GetType()];
-            return rules.IsMoveValid(piece, src, dst, board);
+            var rules = MovementRules[piece.GetType()];       // e.g., piece.GetRule().IsMoveValid(piece, src, dst, board) or 
+            return rules.IsMoveValid(piece, src, dst, board); // straightforward piece.IsMoveValid(src, dst, board)
         }
     }
 }
