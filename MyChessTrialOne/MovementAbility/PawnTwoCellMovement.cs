@@ -4,12 +4,12 @@ using System.Text;
 
 namespace MyChessTrialOne
 {
-    public class PawnSpecialMovement : VerticalMovement
+    public class PawnTwoCellMovement : VerticalMovement
     {
         private const int WhitePawnOriginalY = 2;
         private const int BlackPawnOriginalY = 7;
 
-        public PawnSpecialMovement(Movement m) : base(m, 2, EVerticalMode.ForwardOnlyCannotCapture) { }
+        public PawnTwoCellMovement(Movement m) : base(m, 2, EVerticalMode.ForwardOnlyCannotCapture) { }
 
         public override void ValidMove(MoveValidationContext context)
         {

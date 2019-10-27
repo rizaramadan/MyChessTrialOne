@@ -25,6 +25,24 @@ namespace MyChessTrialOne
         {
             return ToString().GetHashCode();
         }
+
+        public static bool IsXValid(char x) => x >= Board.StartOfX && x <= Board.EndOfX;
+        public static bool IsYValid(int y) => y >= Board.StartOfY && y <= Board.EndOfY;
+    }
+
+    public static class CharExt
+    {
+        public static char Increase(this char c, int i)
+        {
+            var srcInt = Convert.ToInt16(c);
+            return (char)(srcInt + i);
+        }
+
+        public static char Decrease(this char c, int i)
+        {
+            var srcInt = Convert.ToInt16(c);
+            return (char)(srcInt - i);
+        }
     }
 
     public enum EPlayer
@@ -35,7 +53,13 @@ namespace MyChessTrialOne
 
     public class Board : Dictionary<Cell, Piece>
     {
+        public const int StartOfY = 1;
+        public const int EndOfY = 8;
 
+        public const char StartOfX = 'a';
+        public const char EndOfX = 'h';
+
+        public const char KingOriginalX = 'e';
     }
 
     public abstract class Piece
@@ -62,7 +86,8 @@ namespace MyChessTrialOne
         {
             Movement = new Default();
             Movement = new VerticalMovement(Movement, 1, EVerticalMode.ForwardOnlyCannotCapture);
-            Movement = new PawnSpecialMovement(Movement);
+            Movement = new PawnTwoCellMovement(Movement);
+            Movement = new DiagonalMovement(Movement, 1, EDiagonalMode.ForwardCaptureOnly);
         }
     }
 
@@ -81,6 +106,7 @@ namespace MyChessTrialOne
         public override void InitMovement()
         {
             Movement = new Default();
+            Movement = new KnightMovement(Movement);
         }
     }
 
@@ -89,6 +115,7 @@ namespace MyChessTrialOne
         public override void InitMovement()
         {
             Movement = new Default();
+            Movement = new DiagonalMovement(Movement, 8, EDiagonalMode.Any);
         }
     }
 
@@ -99,6 +126,7 @@ namespace MyChessTrialOne
             Movement = new Default();
             Movement = new VerticalMovement(Movement, 8, EVerticalMode.Any);
             Movement = new HorizontalMovement(Movement, 8);
+            Movement = new DiagonalMovement(Movement, 8, EDiagonalMode.Any);
         }
     }
 
@@ -109,6 +137,8 @@ namespace MyChessTrialOne
             Movement = new Default();
             Movement = new VerticalMovement(Movement, 1, EVerticalMode.Any);
             Movement = new HorizontalMovement(Movement, 1);
+            Movement = new DiagonalMovement(Movement, 1, EDiagonalMode.Any);
+            Movement = new KingCastlingMovement(Movement);
         }
     }
 

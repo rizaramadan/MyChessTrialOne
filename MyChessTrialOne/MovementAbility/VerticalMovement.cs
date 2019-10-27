@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyChessTrialOne
 {
-    public class VerticalMovement : Decorator
+    public class VerticalMovement : MovementAbility
     {
         int MaxDistance { get; }
         EVerticalMode Mode { get; }

@@ -9,16 +9,11 @@ namespace MyChessTrialOne
         public Cell Src { get; set; }
         public Cell Dst { get; set; }
 
-        public bool IsValid()
-        {
-            var a = Convert.ToUInt16('a');
-            var h = Convert.ToUInt16('h');
-            return Src.XToInt() >= a && Src.XToInt() <= h
-                && Dst.XToInt() >= a && Dst.XToInt() <= h
-                && Src.Y >= 1 && Src.Y <= 8
-                && Dst.Y >= 1 && Src.Y <= 8;
-
-        }
+        public bool IsValid() =>
+            Cell.IsXValid(Src.X)
+            && Cell.IsYValid(Src.Y)
+            && Cell.IsXValid(Dst.X)
+            && Cell.IsYValid(Dst.Y);
     }
 
     public static class CommandParser

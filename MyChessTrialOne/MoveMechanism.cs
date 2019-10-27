@@ -16,10 +16,10 @@ namespace MyChessTrialOne
         public override void ValidMove(MoveValidationContext context) { }
     }
 
-    public abstract class Decorator : Movement
+    public abstract class MovementAbility : Movement
     {
         protected Movement Movement { get; set; }
-        public Decorator(Movement m)
+        public MovementAbility(Movement m)
         {
             Movement = m;
         }
@@ -41,7 +41,6 @@ namespace MyChessTrialOne
     {
         NormalMove,
         CaptureMove,
-        PromoteMove,
         CastlingMove
     }
 

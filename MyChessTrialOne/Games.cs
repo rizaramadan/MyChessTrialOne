@@ -46,38 +46,40 @@ namespace MyChessTrialOne
         public void Start()
         {
             Console.WriteLine("init board");
-            var startX = 'a';
             //init pawn
+            var pawnChar = 'P';
             for (var i = 0; i < MaxBoard; i++)
             {
-                var theX = (char)(Convert.ToUInt16(startX) + i);
-                Board[new Cell { X = theX, Y = 2 }] = new Pawn { Player = EPlayer.White , BoardChar = 'P' };
-                Board[new Cell { X = theX, Y = 7 }] = new Pawn { Player = EPlayer.Black, BoardChar = 'p' };
+                var theX = Board.StartOfX.Increase(i);
+                Board[new Cell { X = theX, Y = Board.StartOfY + 1 }] = new Pawn { Player = EPlayer.White , BoardChar = pawnChar };
+                Board[new Cell { X = theX, Y = Board.EndOfY - 1 }] = new Pawn { Player = EPlayer.Black, BoardChar = char.ToLower(pawnChar) };
             }
             //init rock
             var rockChar = 'R';
-            Board[new Cell { X = 'a', Y = 1 }] = new Rock { Player = EPlayer.White, BoardChar = rockChar };
-            Board[new Cell { X = 'h', Y = 1 }] = new Rock { Player = EPlayer.White, BoardChar = rockChar };
-            Board[new Cell { X = 'a', Y = 8 }] = new Rock { Player = EPlayer.Black, BoardChar = char.ToLower(rockChar) };
-            Board[new Cell { X = 'h', Y = 8 }] = new Rock { Player = EPlayer.Black, BoardChar = char.ToLower(rockChar) };
+            Board[new Cell { X = Board.StartOfX, Y = Board.StartOfY }] = new Rock { Player = EPlayer.White, BoardChar = rockChar };
+            Board[new Cell { X = Board.EndOfX, Y = Board.StartOfY }] = new Rock { Player = EPlayer.White, BoardChar = rockChar };
+            Board[new Cell { X = Board.StartOfX, Y = Board.EndOfY }] = new Rock { Player = EPlayer.Black, BoardChar = char.ToLower(rockChar) };
+            Board[new Cell { X = Board.EndOfX, Y = Board.EndOfY }] = new Rock { Player = EPlayer.Black, BoardChar = char.ToLower(rockChar) };
             //init knight 
             var knightChar = 'T';
-            Board[new Cell { X = 'b', Y = 1 }] = new Knight { Player = EPlayer.White, BoardChar = knightChar };
-            Board[new Cell { X = 'g', Y = 1 }] = new Knight { Player = EPlayer.White, BoardChar = knightChar };
-            Board[new Cell { X = 'b', Y = 8 }] = new Knight { Player = EPlayer.Black, BoardChar = char.ToLower(knightChar) };
-            Board[new Cell { X = 'g', Y = 8 }] = new Knight { Player = EPlayer.Black, BoardChar = char.ToLower(knightChar) };
+            Board[new Cell { X = 'b', Y = Board.StartOfY }] = new Knight { Player = EPlayer.White, BoardChar = knightChar };
+            Board[new Cell { X = 'g', Y = Board.StartOfY }] = new Knight { Player = EPlayer.White, BoardChar = knightChar };
+            Board[new Cell { X = 'b', Y = Board.EndOfY }] = new Knight { Player = EPlayer.Black, BoardChar = char.ToLower(knightChar) };
+            Board[new Cell { X = 'g', Y = Board.EndOfY }] = new Knight { Player = EPlayer.Black, BoardChar = char.ToLower(knightChar) };
             //init bishop 
             var bishopChar = 'B';
-            Board[new Cell { X = 'c', Y = 1 }] = new Bishop { Player = EPlayer.White, BoardChar = bishopChar };
-            Board[new Cell { X = 'f', Y = 1 }] = new Bishop { Player = EPlayer.White, BoardChar = bishopChar };
-            Board[new Cell { X = 'c', Y = 8 }] = new Bishop { Player = EPlayer.Black, BoardChar = char.ToLower(bishopChar) };
-            Board[new Cell { X = 'f', Y = 8 }] = new Bishop { Player = EPlayer.Black, BoardChar = char.ToLower(bishopChar) };
+            Board[new Cell { X = 'c', Y = Board.StartOfY }] = new Bishop { Player = EPlayer.White, BoardChar = bishopChar };
+            Board[new Cell { X = 'f', Y = Board.StartOfY }] = new Bishop { Player = EPlayer.White, BoardChar = bishopChar };
+            Board[new Cell { X = 'c', Y = Board.EndOfY }] = new Bishop { Player = EPlayer.Black, BoardChar = char.ToLower(bishopChar) };
+            Board[new Cell { X = 'f', Y = Board.EndOfY }] = new Bishop { Player = EPlayer.Black, BoardChar = char.ToLower(bishopChar) };
             //init queen 
-            Board[new Cell { X = 'd', Y = 1 }] = new Queen { Player = EPlayer.White, BoardChar = 'Q'};
-            Board[new Cell { X = 'd', Y = 8 }] = new Queen { Player = EPlayer.Black, BoardChar = 'q'};
+            var queenChar = 'Q';
+            Board[new Cell { X = 'd', Y = Board.StartOfY }] = new Queen { Player = EPlayer.White, BoardChar = queenChar };
+            Board[new Cell { X = 'd', Y = Board.EndOfY }] = new Queen { Player = EPlayer.Black, BoardChar = char.ToLower(queenChar) };
             //init king 
-            Board[new Cell { X = 'e', Y = 1 }] = new King { Player = EPlayer.White, BoardChar = 'K'};
-            Board[new Cell { X = 'e', Y = 8 }] = new King { Player = EPlayer.Black, BoardChar = 'k' };
+            var kingChar = 'K';
+            Board[new Cell { X = Board.KingOriginalX, Y = Board.StartOfY }] = new King { Player = EPlayer.White, BoardChar = kingChar };
+            Board[new Cell { X = Board.KingOriginalX, Y = Board.EndOfY }] = new King { Player = EPlayer.Black, BoardChar = char.ToLower(kingChar) };
 
             Board.Values.ToList().ForEach(x => x.InitMovement());
 
@@ -102,7 +104,7 @@ namespace MyChessTrialOne
                 {
                     MoveExecutor.ExecuteMove
                     (
-                        new MoveExecutionInput
+                        new MoveExecutionContext
                         {
                             Type = moveOutput.Type, Src = src, Dst = moveOutput.Cell, Piece = piece, Board = Board, Captured = Captured
                         }

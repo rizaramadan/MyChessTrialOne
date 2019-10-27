@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyChessTrialOne
 {
-    public class HorizontalMovement : Decorator
+    public class HorizontalMovement : MovementAbility
     {
         int MaxDistance { get; }
 
@@ -18,18 +18,9 @@ namespace MyChessTrialOne
         {
             Movement.ValidMove(context);
             //left
-            ValidMoveAction(context, (src, i) => 
-            {
-                var srcInt = Convert.ToInt16(src);
-                return (char)(srcInt - i);
-            });
+            ValidMoveAction(context, (src, i) => src.Increase(i));
             //right
-            ValidMoveAction(context, (src, i) =>
-            {
-                var srcInt = Convert.ToInt16(src);
-                return (char)(srcInt + i);
-            });
-
+            ValidMoveAction(context, (src, i) => src.Decrease(i));
         }
 
         protected void ValidMoveAction(MoveValidationContext context, Func<char, int, char> funcNextX)
